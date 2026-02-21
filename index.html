@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisdatul Alifa — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --accent: #7fffb2;
+    --accent2: #ff7faa;
+    --accent3: #7fb8ff;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --border: #2a2a3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: exclusion;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 80px 60px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-bg-circle {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(127,255,178,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(127,255,178,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127,255,178,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 60px;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(10,10,15,0.9), transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(60px, 8vw, 110px);
+    font-weight: 700;
+    line-height: 0.9;
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero-name span {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .hero-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 420px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(127,255,178,0.3);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 60px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* Floating tech tags */
+  .float-tag {
+    position: absolute;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(22,22,31,0.8);
+    backdrop-filter: blur(10px);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .tag-1 { top: 25%; left: 55%; animation-delay: 0s; }
+  .tag-2 { top: 40%; left: 70%; animation-delay: 1.5s; }
+  .tag-3 { top: 60%; left: 52%; animation-delay: 0.7s; }
+  .tag-4 { top: 70%; left: 72%; animation-delay: 2s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Sections */
+  section {
+    padding: 120px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 64px;
+  }
+
+  /* Skills */
+  .skills-section { background: var(--surface); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .skill-card {
+    background: var(--card);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .skill-card:hover::before { transform: scaleX(1); }
+  .skill-card:hover { background: #1c1c28; }
+
+  .skill-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .skill-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .skill-items {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* Experience */
+  .exp-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .exp-item {
+    background: var(--card);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    gap: 40px;
+    align-items: start;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp-item::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.3s;
+    transform-origin: top;
+  }
+
+  .exp-item:hover { background: #1c1c28; }
+  .exp-item:hover::after { transform: scaleY(1); }
+
+  .exp-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+  }
+
+  .exp-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .exp-company {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .exp-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .exp-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    align-self: flex-start;
+  }
+
+  /* Portfolio */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .port-card {
+    background: var(--card);
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: background 0.3s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .port-card:hover { background: #1c1c28; }
+
+  .port-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    font-weight: 700;
+    color: rgba(127,255,178,0.06);
+    position: absolute;
+    top: -20px; right: 20px;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+
+  .port-card:hover .port-number { color: rgba(127,255,178,0.12); }
+
+  .port-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .port-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .port-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 380px;
+  }
+
+  .port-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: gap 0.2s;
+  }
+
+  .port-card:hover .port-link { gap: 20px; }
+
+  .port-link::after {
+    content: '→';
+    font-size: 16px;
+  }
+
+  /* Education */
+  .edu-timeline { position: relative; padding-left: 40px; }
+
+  .edu-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .edu-item {
+    position: relative;
+    padding: 0 0 60px 40px;
+  }
+
+  .edu-item::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 8px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--accent);
+  }
+
+  .edu-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .edu-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .edu-school {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .edu-gpa {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid rgba(127,255,178,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  /* Contact */
+  .contact-section {
+    background: var(--surface);
+    text-align: center;
+  }
+
+  .contact-section .section-label { justify-content: center; }
+  .contact-section .section-label::before { display: none; }
+
+  .contact-grid {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 48px;
+  }
+
+  .contact-item {
+    background: var(--card);
+    padding: 28px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: none;
+  }
+
+  .contact-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(127,255,178,0.1);
+  }
+
+  .contact-icon { font-size: 24px; }
+
+  .contact-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .contact-value {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Divider line */
+  .line-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 120px 30px 80px; }
+    .nav { padding: 24px 30px; }
+    .nav-links { display: none; }
+    section { padding: 80px 30px; }
+    .exp-item { grid-template-columns: 1fr; gap: 16px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">LA — 2025</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="about" style="max-width: 100%; padding: 0;">
+  <div class="hero-grid"></div>
+  <div class="hero-left">
+    <div class="badge">Available for Opportunities</div>
+    <h1 class="hero-name">
+      Lisdatul
+      <span>Alifa</span>
+    </h1>
+    <p class="hero-title">Electrical & Telecommunication Engineer</p>
+    <p class="hero-desc">
+      Master's student at Institut Teknologi Bandung. Building intelligent systems at the intersection of IoT, Cloud Infrastructure, and Signal Processing.
+    </p>
+    <div class="hero-cta">
+      <a href="https://linkedin.com/in/lisdatul-alifa" class="btn btn-primary">Get In Touch</a>
+      <a href="#portfolio" class="btn btn-ghost">View Work</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bg-circle"></div>
+    <div class="float-tag tag-1">Python · PyTorch</div>
+    <div class="float-tag tag-2">Google Cloud Platform</div>
+    <div class="float-tag tag-3">IoT · Signal Processing</div>
+    <div class="float-tag tag-4">ReactJS · Linux</div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">3.93</div>
+        <div class="stat-label">Current GPA</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">Companies</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">83%</div>
+        <div class="stat-label">Accuracy Boost</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="line-divider"></div>
+
+<!-- Skills -->
+<section style="padding: 0; max-width: 100%; background: var(--surface);">
+  <div style="max-width: 1400px; margin: 0 auto; padding: 120px 60px;">
+    <div class="section-label reveal">Capabilities</div>
+    <h2 class="section-title reveal">What I Do</h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">⚡</div>
+        <div class="skill-name">Programming</div>
+        <div class="skill-items">Python · PyTorch · Java · C++ · MATLAB</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">☁️</div>
+        <div class="skill-name">Cloud & Infrastructure</div>
+        <div class="skill-items">Google Cloud Platform · Linux System Administration · Red Hat RHEL</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">📊</div>
+        <div class="skill-name">Data Analytics</div>
+        <div class="skill-items">BigQuery · Google Looker Studio · Automated Anomaly Detection</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">Frontend Development</div>
+        <div class="skill-items">ReactJS · JavaScript · jQuery · HTML/CSS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="line-divider"></div>
+
+<!-- Experience -->
+<section id="experience" style="max-width: 1400px; margin: 0 auto;">
+  <div class="section-label reveal">Work History</div>
+  <h2 class="section-title reveal">Experience</h2>
+  <div class="exp-list">
+
+    <div class="exp-item reveal">
+      <div class="exp-period">Jul — Oct 2025</div>
+      <div>
+        <div class="exp-role">Process Engineer</div>
+        <div class="exp-company">PEGAUNIHAN TECHNOLOGY INDONESIA</div>
+        <div class="exp-desc">
+          Analyzed and optimized performance for 9 distinct IoT device models by developing automated anomaly detection pipelines using Python, Java, and advanced Excel — resulting in an <strong style="color: var(--accent);">83% increase in monitoring accuracy</strong>. Led 4 technicians in executing system enhancements.
+        </div>
+      </div>
+      <div class="exp-tag">Contract</div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-period">Sep — Dec 2024</div>
+      <div>
+        <div class="exp-role">Research Engineer</div>
+        <div class="exp-company">PT LAPI ITB</div>
+        <div class="exp-desc">
+          Conducted optimization and technical validation of the Combiner in GCI Radar Systems. Managed comprehensive final project documentation for appropriate technology development.
+        </div>
+      </div>
+      <div class="exp-tag">Part-time</div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-period">Feb — Jun 2024</div>
+      <div>
+        <div class="exp-role">System Engineer</div>
+        <div class="exp-company">PT LEN INDUSTRI</div>
+        <div class="exp-desc">
+          Integrated a VoIP system into PT LEN Industri's network emulator using Java, contributing to defense electronics and railway signaling systems development.
+        </div>
+      </div>
+      <div class="exp-tag">Internship</div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-period">Jun — Aug 2023</div>
+      <div>
+        <div class="exp-role">Telecommunication Engineer</div>
+        <div class="exp-company">AIRNAV INDONESIA</div>
+        <div class="exp-desc">
+          Designed and constructed a sound recording system for pilot-ATC conversations for Common Traffic Advisory Frequency (CTAF) areas.
+        </div>
+      </div>
+      <div class="exp-tag">Internship</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="line-divider"></div>
+
+<!-- Portfolio -->
+<section id="portfolio" style="max-width: 100%; padding: 0; background: var(--surface);">
+  <div style="max-width: 1400px; margin: 0 auto; padding: 120px 60px;">
+    <div class="section-label reveal">Projects</div>
+    <h2 class="section-title reveal">Portfolio</h2>
+    <div class="portfolio-grid">
+
+      <a href="https://alifalisda.github.io" target="_blank" class="port-card reveal">
+        <div class="port-number">01</div>
+        <div class="port-label">Web Application</div>
+        <div class="port-title">LTKA Radio</div>
+        <div class="port-desc">
+          An online radio platform providing access to 89 radio stations across all provinces in Indonesia. Built for seamless streaming of local Indonesian content.
+        </div>
+        <div class="port-link">Visit Project</div>
+      </a>
+
+      <a href="#" target="_blank" class="port-card reveal">
+        <div class="port-number">02</div>
+        <div class="port-label">Information Platform</div>
+        <div class="port-title">All About Palestine</div>
+        <div class="port-desc">
+          A website providing daily updates on casualties, infrastructure damage, and a brief history of the Israeli-Palestinian conflict — keeping the world informed.
+        </div>
+        <div class="port-link">Visit Project</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<div class="line-divider"></div>
+
+<!-- Education -->
+<section style="max-width: 1400px; margin: 0 auto;">
+  <div class="section-label reveal">Academic Background</div>
+  <h2 class="section-title reveal">Education</h2>
+  <div class="edu-timeline">
+
+    <div class="edu-item reveal">
+      <div class="edu-year">2024 — 2026 (Expected)</div>
+      <div class="edu-degree">Master's Degree</div>
+      <div class="edu-school">Electrical Engineering · Institut Teknologi Bandung</div>
+      <span class="edu-gpa">GPA 3.93 / 4.00</span>
+    </div>
+
+    <div class="edu-item reveal">
+      <div class="edu-year">2020 — 2024</div>
+      <div class="edu-degree">Bachelor's Degree</div>
+      <div class="edu-school">Telecommunication Engineering · Institut Teknologi Bandung</div>
+      <span class="edu-gpa">GPA 3.56 / 4.00</span>
+    </div>
+
+    <div class="edu-item reveal">
+      <div class="edu-year">2017 — 2020</div>
+      <div class="edu-degree">Senior High School</div>
+      <div class="edu-school">Science · SMAN Modal Bangsa Aceh</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="line-divider"></div>
+
+<!-- Contact -->
+<section id="contact" style="max-width: 100%; padding: 0; background: var(--surface);">
+  <div class="contact-section" style="padding: 120px 60px;">
+    <div class="section-label reveal">Let's Connect</div>
+    <h2 class="section-title reveal" style="margin-bottom: 16px;">Get In Touch</h2>
+    <p class="reveal" style="color: var(--muted); font-size: 16px; max-width: 400px; margin: 0 auto 0;">
+      Open to research collaborations, engineering roles, and meaningful projects.
+    </p>
+    <div class="contact-grid reveal">
+      <a href="mailto:lisdatulalifa143@gmail.com" class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value">lisdatulalifa143@gmail.com</div>
+      </a>
+      <a href="tel:082291991611" class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div class="contact-label">Phone</div>
+        <div class="contact-value">082291991611</div>
+      </a>
+      <a href="https://linkedin.com/in/lisdatul-alifa" target="_blank" class="contact-item">
+        <div class="contact-icon">🔗</div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">Lisdatul Alifa</div>
+      </a>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div class="contact-label">Location</div>
+        <div class="contact-value">Aceh Besar, Indonesia</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Lisdatul Alifa</span>
+  <span>Institut Teknologi Bandung · Electrical Engineering</span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
